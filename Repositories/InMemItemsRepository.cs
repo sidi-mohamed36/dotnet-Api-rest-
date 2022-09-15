@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using catalog.Entities;
+using System.Threading.Tasks;
 
 namespace catalog.Repositories{
    
@@ -16,29 +17,33 @@ namespace catalog.Repositories{
             new Item {Id=Guid.NewGuid(),Name="Potion",Price=9,CreatedDate = DateTimeOffset.UtcNow}
 
         };
-        public IEnumerable<Item> GetItemsAsync()
+        public async Task<IEnumerable<Item>> GetItemsAsync()
         {
             //var items = repository.GetItems();
-            return items;
+            return await Task.FromResult(items);
         }
-        public Item GetItemAsync(Guid id)
+        public async Task<Item> GetItemAsync(Guid id)
         {
-            return items.Where(item => item.Id == id).SingleOrDefault();
+            var item = items.Where(item => item.Id == id).SingleOrDefault();
+            return await Task.FromResult(item);
         }
 
-        public void CreatItemAsync(Item item){
+        public async Task CreatItemAsync(Item item){
             items.Add(item);
+            await Task.CompletedTask;
         }
 
-        public void UpdateItemAsync(Item item)
+        public async Task UpdateItemAsync(Item item)
         {
             var index =items.FindIndex(existingItem => existingItem.Id == item.Id);
             items[index] = item;
+            await Task.CompletedTask;
         }
-        public void DeleteItemAsync(Guid id)
+        public async Task DeleteItemAsync(Guid id)
         {
             var index = items.FindIndex(existingItem => existingItem.Id == id);
             items.RemoveAt(index);
+            await Task.CompletedTask;
         }
     }
 }
